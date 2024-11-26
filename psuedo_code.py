@@ -2,13 +2,10 @@
 # "This is a consumption-only API — only the HTTP GET method is available on resources."
 
 import urllib.parse, urllib.request, urllib.error, json
+# from geopy.geocoders import Nominatim
 import pprint
 
-api_key = "f4faec061bb6ac6ac936fc8b38cbb9dc"
 base_url_pokemon = "https://pokeapi.co/api/v2/"
-base_url_weather = "https://api.openweathermap.org/data/2.5/weather"
-
-# https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
 # Some code I had established in an earlier homework (Angel), the understanding of this is to
 # pull the info we need from the Pokemon API
@@ -64,6 +61,8 @@ def pokemon_sprite(pokemon_data):
     # Can be called from get_pokemon_info
     # returns type from pokemon_data
 
+# Function to get the
+
 def main():
     # Allows the user to input Pokemon names as many times at they want
     while True:
@@ -73,10 +72,30 @@ def main():
         get_pokemon_info(pokemon_name)
 
 # main()
+basic_weather_conditions = {
+  "clear": ["Fire", "Grass", "Ground"],
+  "rain": ["Water", "Electric", "Bug"],
+  "snow": ["Ice", "Steel"],
+  "wind": ["Flying", "Dragon", "Psychic"],
+  "clouds": ["Fairy", "Fighting", "Poison"],
+  "fog": ["Ghost", "Dark"]
+}
 
 # Pseudo Code for Weather API
+api_key = "f4faec061bb6ac6ac936fc8b38cbb9dc"
+base_url_weather = "https://api.openweathermap.org/data/3.0/weather"
+# https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+
+# Function that calls geopy takes in the name of the area
+    # returns the lat and lng for the weather API
+
 # Function that calls current predetermined locations in Washington
     # Code that runs within it and calls the get_pokemon_info
+
 # Function that considers optional locations for current weather locations
+    # Takes the lat and lng of the geopy function
 
-
+# Function that takes the current weather conditions as a parameter
+    # Create a randomness variable assigned to each pokemon on that list
+    # Chooses two pokemon from a list of pokemon that appear during that weather, based on highest value
+    # returns the two pokemon which will be used to get the sprite to add to the card shown on the readme
