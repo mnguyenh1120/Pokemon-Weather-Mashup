@@ -4,14 +4,16 @@
 import urllib.parse, urllib.request, urllib.error, json
 import pprint
 
-api_key = f4faec061bb6ac6ac936fc8b38cbb9dc
+api_key = "f4faec061bb6ac6ac936fc8b38cbb9dc"
 base_url_pokemon = "https://pokeapi.co/api/v2/"
-base_url_weather = "http://api.openweathermap.org/data/2.5/weather"
+base_url_weather = "https://api.openweathermap.org/data/2.5/weather"
 
 # https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
+# Some code I had established in an earlier homework (Angel), the understanding of this is to
+# pull the info we need from the Pokemon API
 def get_pokemon_info(pokemon_name):
-    pokemon = f'{base_url}pokemon/{pokemon_name.lower()}'
+    pokemon = f'{base_url_pokemon}pokemon/{pokemon_name.lower()}'
 
     try:
         print(f'Requesting Pokemon Info: {pokemon}')
@@ -54,6 +56,14 @@ def pokemon_sprite(pokemon_data):
 # pokemon_name = 'Pikachuu' # Fails, error code 404 since it is not spelt correctly
 # get_pokemon_info(pokemon_name)
 
+# Function to get the Pokemon's habitat
+    # Can be called from get_pokemon_info
+    # returns habitat from pokemon_data
+
+# Function to get the Pokemon's type
+    # Can be called from get_pokemon_info
+    # returns type from pokemon_data
+
 def main():
     # Allows the user to input Pokemon names as many times at they want
     while True:
@@ -62,8 +72,11 @@ def main():
             break
         get_pokemon_info(pokemon_name)
 
-main()
+# main()
 
-# Pseudo Code
+# Pseudo Code for Weather API
+# Function that calls current predetermined locations in Washington
+    # Code that runs within it and calls the get_pokemon_info
+# Function that considers optional locations for current weather locations
 
-# To access the current
+
