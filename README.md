@@ -9,4 +9,5 @@ This tool is intended for Pokémon fans of all ages who want to feel a closer co
 Overall, we want to build a website that uses real-time weather and geolocation data of nine cities throughout Washington state, including: Seattle, Bellevue, Tacoma, Vancouver, Bellingham, Forks, Sunnyside, Leavenworth, and Spokane.
 
 ## Intended Output:
-![Intended Output](Images/Project Visual.png)
+![Intended Output](Images/Project_Visual.png)
+
