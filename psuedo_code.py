@@ -4,14 +4,17 @@
 import urllib.parse, urllib.request, urllib.error, json
 import pprint
 
+api_key = f4faec061bb6ac6ac936fc8b38cbb9dc
+base_url_pokemon = "https://pokeapi.co/api/v2/"
+base_url_weather = "http://api.openweathermap.org/data/2.5/weather"
 
-base_url = "https://pokeapi.co/api/v2/"
+# https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
 def get_pokemon_info(pokemon_name):
     pokemon = f'{base_url}pokemon/{pokemon_name.lower()}'
-    print(f'Requesting Pokemon Info: {pokemon}')
 
     try:
+        print(f'Requesting Pokemon Info: {pokemon}')
         # Did some searching and for some odd reason having this general token helped fix error 403 that I was having
         pokemon_request = urllib.request.Request(pokemon, headers={'User-Agent': 'Mozilla/5.0'})
 
@@ -60,3 +63,7 @@ def main():
         get_pokemon_info(pokemon_name)
 
 main()
+
+# Pseudo Code
+
+# To access the current
