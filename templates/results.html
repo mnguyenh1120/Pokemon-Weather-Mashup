@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% else %}
+        <h2>Results for {{ results['name'] }}</h2>
+        <img src="{{ results['sprites']['front_default'] }}" alt="Pokemon Sprite">
+    {% endif %}
+    <a href="/">Go back</a>
+</body>
+</html>

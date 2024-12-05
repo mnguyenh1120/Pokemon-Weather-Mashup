@@ -1,6 +1,7 @@
 # PokeAPI
 # "This is a consumption-only API — only the HTTP GET method is available on resources."
 
+from flask import Flask
 import urllib.parse, urllib.request, urllib.error, json
 # from geopy.geocoders import Nominatim
 import pprint
@@ -82,8 +83,8 @@ basic_weather_conditions = {
 }
 
 # Pseudo Code for Weather API
-api_key = "f4faec061bb6ac6ac936fc8b38cbb9dc"
-base_url_weather = "https://api.openweathermap.org/data/3.0/weather"
+# api_key = "f4faec061bb6ac6ac936fc8b38cbb9dc"
+# base_url_weather = "https://api.openweathermap.org/data/3.0/weather"
 # https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
 # Function that calls geopy takes in the name of the area
