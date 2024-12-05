@@ -4,10 +4,12 @@
 from sys import excepthook
 
 import requests
+from keys import api_key1
 from flask import Flask, current_app
 import urllib.parse, urllib.request, urllib.error, json
 import pprint
 import random
+import time
 
 # from matplotlib.sphinxext.mathmpl import latex_math
 
@@ -17,21 +19,21 @@ import random
 # pull the info we need from the Pokemon API
 
 weather_to_pokemon_type = {
-    "Thunderstorm": ["Electric", "Flying", "Dragon", "Water", "Bug"],
-    "Drizzle": ["Water", "Bug", "Fairy"],
-    "Rain": ["Water", "Electric", "Bug"],
-    "Snow": ["Ice", "Steel", "Water"],
-    "Mist": ["Ghost", "Dark", "Fairy"],
-    "Smoke": ["Ghost", "Dark", "Fairy"],
-    "Haze": ["Ghost", "Dark", "Fairy"],
-    "Dust": ["Ghost", "Dark", "Fairy"],
-    "Fog": ["Ghost", "Dark", "Fairy"],
-    "Sand": ["Ground", "Rock", "Steel"],
-    "Ash": ["Fire", "Dragon", "Flying"],
-    "Squall": ["Flying", "Water", "Dragon", "Psychic"],
-    "Tornado": ["Flying", "Dragon", "Psychic"],
-    "Clear": ["Fire", "Grass", "Ground", "Normal"],
-    "Clouds": ["Fairy", "Fighting", "Poison"],
+    "Thunderstorm": ["electric", "flying", "dragon", "water", "bug"],
+    "Drizzle": ["water", "bug", "fairy"],
+    "Rain": ["water", "electric", "bug"],
+    "Snow": ["ice", "steel", "water"],
+    "Mist": ["ghost", "dark", "fairy"],
+    "Smoke": ["ghost", "dark", "fairy"],
+    "Haze": ["ghost", "dark", "fairy"],
+    "Dust": ["ghost", "dark", "fairy"],
+    "Fog": ["ghost", "dark", "fairy"],
+    "Sand": ["ground", "rock", "steel"],
+    "Ash": ["fire", "dragon", "flying"],
+    "Squall": ["flying", "water", "dragon", "psychic"],
+    "Tornado": ["flying", "dragon", "psychic"],
+    "Clear": ["fire", "grass", "ground", "normal"],
+    "Clouds": ["fairy", "fighting", "poison"],
 }
 
 def get_pokemon_info(pokemon_name):
@@ -74,27 +76,36 @@ def pokemon_sprite(pokemon_data):
 
 
 def get_pokemon_by_type(pokemon_types):
+    if isinstance(pokemon_types, str):
+        pokemon_types = [pokemon_types]
     pokemon_list = []
 
     for pokemon_type in pokemon_types:
         pokemon_type_url = f'https://pokeapi.co/api/v2/type/{pokemon_type}/'
-        response = requests.get(pokemon_type_url, headers={'User-Agent': 'Mozilla/5.0'})
-        data = response.json()
+        pokemon_type_request = urllib.request.Request(pokemon_type_url, headers={'User-Agent': 'Mozilla/5.0'})
+        try:
+            with urllib.request.urlopen(pokemon_type_request) as response:
+                pokemon_type_data = json.loads(response.read().decode('utf-8'))
+                pprint.pprint(pokemon_type_data)
+                for pokemon in pokemon_type_data['pokemon']:
+                    pokemon_list.append(pokemon['pokemon']['name'])
 
-        for pokemon in data['pokemon']:
-            pokemon_list.append(pokemon['pokemon']['name'])
-
+            time.sleep(1)
+        except Exception as error:
+            print(f"Error fetching data for type '{pokemon_type}': {error}")
+            continue
+    print(pokemon_list)
     return pokemon_list
 
-def get_pokemon_for_weather(weather_condition):
+def get_types_for_weather(weather_condition):
     if not weather_condition:
         print("Invalid weather condition received.")
         return None
-
+    print(f'Weather to pull types from : {weather_condition}')
     types_to_search = weather_to_pokemon_type.get(weather_condition)
     if types_to_search:
         pokemon_list = get_pokemon_by_type(types_to_search)
-        randomized_pokemon(set(pokemon_list))
+        randomized_pokemon(list(set(pokemon_list)))
     else:
         return None
 
@@ -104,9 +115,9 @@ def randomized_pokemon(pokemon_list):
     is_it_shiny = random.random() < shiny_chance
     return chosen_pokemon, is_it_shiny
 
-def geolocation_finder(location, limit = 1, api_key = api_key):
+def geolocation_finder(location, api_key1, limit = 1):
     base_url_geolocation = "http://api.openweathermap.org/geo/1.0/direct?q="
-    geolocation = f'{base_url_geolocation}{location}&limit={limit}&appid={api_key}'
+    geolocation = f'{base_url_geolocation}{location}&limit={limit}&appid={api_key1}'
 
     geolocation_request = urllib.request.Request(geolocation)
 
@@ -115,17 +126,17 @@ def geolocation_finder(location, limit = 1, api_key = api_key):
         # pprint.pprint(location_data)
         if location_data:
             coordinates = (location_data[0]['lat'], location_data[0]['lon'])
-            get_current_forecast(coordinates)
+            get_current_forecast(coordinates, api_key1)
             return coordinates
         else:
             return None
 
-def get_current_forecast(coordinates):
+def get_current_forecast(coordinates, api_key1):
     if not coordinates:
         return None
     try:
         base_url_weather = "https://api.openweathermap.org/data/2.5/weather?"
-        current_forecast = f'{base_url_weather}lat={coordinates[0]}&lon={coordinates[1]}&appid={api_key}'
+        current_forecast = f'{base_url_weather}lat={coordinates[0]}&lon={coordinates[1]}&appid={api_key1}'
         print(f"Request URL: {current_forecast}")
         current_forecast_request = urllib.request.Request(current_forecast)
 
@@ -137,6 +148,7 @@ def get_current_forecast(coordinates):
                 iconid = current_forecast_data['weather'][0]['icon']
                 weather_icon(iconid)
                 print(f'Current Forecast: {weather_condition}')
+                get_types_for_weather(weather_condition)
             else:
                 return None
 
@@ -149,4 +161,6 @@ def weather_icon(iconid):
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
 
 
-geolocation_finder('Seattle', api_key)
+geolocation_finder('Seattle', api_key1)
+# get_types_for_weather("Rain")
+# get_pokemon_by_type('fire')
