@@ -1,3 +1,6 @@
+# Ignore the file that has the secret keys
+keys.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
