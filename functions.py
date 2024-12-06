@@ -36,6 +36,20 @@ weather_to_pokemon_type = {
 }
 
 pokemon_cache = {}
+CACHE_EXPIRE_TIME = 600
+
+def is_cache_expired(weather_condition):
+    if weather_condition not in pokemon_cache:
+        return True
+
+    cache_data = pokemon_cache[weather_condition]
+    cache_time = cache_data['timestamp']
+    current_time = time.time()
+
+    if current_time - cache_time > CACHE_EXPIRE_TIME:
+        return True
+    return False
+
 
 def pokemon_sprite(pokemon_data, shiny_status):
 
@@ -110,15 +124,25 @@ def get_pokemon_by_type(pokemon_types):
     return pokemon_list
 
 def get_types_for_weather(weather_condition):
+    # Implementing a cache system
+    if weather_condition in pokemon_cache and not is_cache_expired(weather_condition):
+        print(f'Using cached data for {weather_condition}')
+        return pokemon_cache[weather_condition]['pokemon_data']
+
     if not weather_condition:
         print("Invalid weather condition received.")
         return None
     print(f'Weather to pull types from : {weather_condition}')
     types_to_search = weather_to_pokemon_type.get(weather_condition)
     if types_to_search:
-        pokemon_list = get_pokemon_by_type(types_to_search)
+        pokemon_list = set(get_pokemon_by_type(types_to_search))
         # randomized_pokemon(list(set(pokemon_list)))
-        return list(set(pokemon_list))
+        # Stores the cache with pokemon list
+        pokemon_cache[weather_condition] = {
+            'pokemon_data': list(pokemon_list),
+            'timestamp': time.time()
+        }
+        return list(pokemon_list)
     else:
         return None
 
@@ -199,7 +223,8 @@ def get_city_data():
             "city": city,
             "pokemon": pokemon_pair_data,  # Add the pair of Pokémon
             "temperature": temperature,  # Replace with real weather data if desired
-            "condition": weather_condition,  # Replace with real weather condition if desired)
+            "condition": weather_condition,
+            "icon": icon_url # Replace with real weather condition if desired)
         })
         # time.sleep(0.25)
     return city_data
