@@ -25,4 +25,4 @@ def search():
     return render_template('results.html', data=filtered_data)
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True)

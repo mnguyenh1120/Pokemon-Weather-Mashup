@@ -150,3 +150,7 @@ body {
 .search-bar button:hover {
     background-color: #fd71a2;
 }
+.search-results {
+    font-size: 20px; /* Default font size */
+    line-height: 1.5; /* Improve readability */
+}

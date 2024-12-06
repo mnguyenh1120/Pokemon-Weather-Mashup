@@ -36,23 +36,13 @@ weather_to_pokemon_type = {
 }
 
 pokemon_cache = {}
-CACHE_EXPIRE_TIME = 600
+CACHE_EXPIRE_TIME = 60
 
 def is_cache_expired(weather_condition):
     if weather_condition not in pokemon_cache:
         return True
-
-    cache_data = pokemon_cache[weather_condition]
-    cache_time = cache_data['timestamp']
-    current_time = time.time()
-
-    if current_time - cache_time > CACHE_EXPIRE_TIME:
-        print(f"Cache for {weather_condition} has expired.")
-        return True
-    else:
-        print(f"Cache for {weather_condition} is still valid.")
-        return False
-
+    cache_time = pokemon_cache[weather_condition]['timestamp']
+    return (time.time() - cache_time) > CACHE_EXPIRE_TIME
 
 def pokemon_sprite(pokemon_data, shiny_status):
 
@@ -207,6 +197,22 @@ def weather_icon(iconid):
     # print(f"Request URL: {icon_url}")
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
     return icon_url
+
+def get_pokemon_for_weather_condition(weather_condition, weather_types):
+    if is_cache_expired(weather_condition):
+        print(f"Cache for {weather_condition} is expired. Fetching new data.")
+        # Fetch new Pokémon data (replace with your actual data fetching logic)
+        pokemon_list = get_pokemon_by_type(weather_types)
+        # Update the cache with the new data
+        pokemon_cache[weather_condition] = {
+            'pokemon_data': list(set(pokemon_list)),
+            'timestamp': time.time()  # Update timestamp when new data is fetched
+        }
+        print(f"Updated cache for {weather_condition}: {pokemon_cache[weather_condition]}")
+    else:
+        print(f"Using cached data for {weather_condition}")
+    # Return the list of Pokémon, either from cache or fetched data
+    return pokemon_cache[weather_condition]['pokemon_data']
 
 def get_city_data():
     # List of default cities to use
