@@ -36,14 +36,14 @@ weather_to_pokemon_type = {
 }
 
 pokemon_cache = {}
-CACHE_EXPIRE_TIME = 60
+CACHE_EXPIRE_TIME = 600
 
 def is_cache_expired(city, weather_condition):
     key = (city, weather_condition)
     if key not in pokemon_cache:
         return True
     cache_time = pokemon_cache[key]['timestamp']
-    return (time.time() - cache_time) > CACHE_EXPIRE_TIME
+    return CACHE_EXPIRE_TIME > (time.time() - cache_time)
 
 def pokemon_sprite(pokemon_data, shiny_status):
 
@@ -136,7 +136,7 @@ def randomized_pokemon(pokemon_list):
 def get_types_for_weather(city, weather_condition):
     ### Implementing a cache system ###
     key = (city, weather_condition)
-    if key in pokemon_cache and not is_cache_expired(city, weather_condition):
+    if key in pokemon_cache and is_cache_expired(city, weather_condition):
         print(f"Using cached data for {city}, {weather_condition}")
         return pokemon_cache[key]['pokemon_data']
 
@@ -199,24 +199,6 @@ def weather_icon(iconid):
     # print(f"Request URL: {icon_url}")
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
     return icon_url
-
-def get_pokemon_cache(city, weather_condition):
-    key = (city, weather_condition)
-    if is_cache_expired(city, weather_condition):
-        print(f"Cache for {city}, {weather_condition} is expired. Fetching new data.")
-        # Fetch the list of pokemon
-        pokemon_list = get_types_for_weather(city, weather_condition)
-        # Update the cache with the new data
-        pokemon_pair_data = set(randomized_pokemon(pokemon_list))
-        pokemon_cache[key] = {
-            'pokemon_data': list(pokemon_pair_data),
-            'timestamp': time.time()  # Update timestamp when new data is fetched
-        }
-        print(f"Updated cache for {weather_condition}: {pokemon_cache[key]}")
-    else:
-        print(f"Using cached data for {weather_condition}")
-    # Return the list of Pokémon, either from cache or fetched data
-    return pokemon_cache[key]['pokemon_data']
 
 def get_city_data():
     # List of default cities to use
