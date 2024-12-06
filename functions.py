@@ -47,8 +47,11 @@ def is_cache_expired(weather_condition):
     current_time = time.time()
 
     if current_time - cache_time > CACHE_EXPIRE_TIME:
+        print(f"Cache for {weather_condition} has expired.")
         return True
-    return False
+    else:
+        print(f"Cache for {weather_condition} is still valid.")
+        return False
 
 
 def pokemon_sprite(pokemon_data, shiny_status):

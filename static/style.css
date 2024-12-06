@@ -43,19 +43,19 @@ body {
     box-shadow: 0 4px 6px rgba(34, 34, 89, 0.35);
     overflow: hidden; /* Prevent content overflow */
     position: relative; /* Ensure child elements respect card boundaries */
-    height: 350px;
+    height: 325px;
 }
 .card img {
     width: fit-content;
     height: fit-content;
-    transform: scale(1.6)
+    transform: scale(1.5)
 }
 /* Pokemon Styling */
 .pokemon {
     display: flex; /* Align Pokémon horizontally */
     justify-content: space-evenly; /* Distribute them evenly */
     align-items: center; /* Vertically center Pokémon */
-    padding-bottom: 10px; /* Add padding above and below the Pokémon icons */
+    padding-bottom: 15px; /* Add padding below the Pokémon icons */
 }
 .pokemon-name {
     display: none;
