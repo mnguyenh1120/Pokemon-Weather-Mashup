@@ -23,7 +23,7 @@ body {
     margin: 0 auto;
     width: 1000px; /* Adjust the width as necessary */
     height: auto; /* Adjust the height as necessary */
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     padding-top: 30px;
 }
 .container {
@@ -31,7 +31,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: auto;
     gap: 80px;
-    padding: 40px 200px 200px;
+    padding: 50px 200px 200px;
 }
 /* Cards Styling */
 .card {
@@ -43,20 +43,21 @@ body {
     background-size: cover; /* Make the image cover the entire card */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent the image from repeating */
-    padding-bottom: 20px;
+    padding-bottom: 40px;
     box-shadow: 0 4px 6px rgba(34, 34, 89, 0.35);
+    overflow: hidden; /* Prevent content overflow */
+    position: relative; /* Ensure child elements respect card boundaries */
+    height: 350px;
 }
 .card img {
     width: fit-content;
     height: fit-content;
-    transform: scale(2.1)
+    transform: scale(1.55)
 }
 /* Pokemon Styling */
 .pokemon {
     display: flex; /* Align Pokémon horizontally */
     justify-content: space-evenly; /* Distribute them evenly */
-    margin-top: 0px;
-    margin-bottom: 20px;
 }
 .pokemon-name {
     display: none;
@@ -70,18 +71,19 @@ body {
 }
 /* Weather Info Styling */
 .city {
-    margin-top: 5px; /* Tighten spacing below temperature */
+    /*margin-top: 5px; !* Tighten spacing below temperature *!*/
     font-size: 1.5rem; /* Adjust font size if needed */
-    margin-top: 15px;
-    margin-bottom: 30px;
+    margin-left: 30px;
+    margin-bottom: 50px;
     font-weight: 400;
     color: whitesmoke;
+    text-align: left;
 }
 .temp {
     text-align: left;
     font-size: 4.0rem;
     margin-top: 0px; /* Adjust to make it closer */
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     margin-left: 30px; /* Bring it closer to the left */
     font-weight: 600; /* Keep the font bold */
     color: whitesmoke;
@@ -115,12 +117,10 @@ body {
 .search-bar input[type="text"] {
     width: 400px;
     padding: 10px 25px;
-    border: 2px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 20px;
     font-family: 'Poppins', Arial, sans-serif;
     font-weight: 400;
-    font-size: 20px;
 }
 
 .search-bar button {
@@ -128,7 +128,6 @@ body {
     margin-left: 15px;
     background-color: #e89cb7;
     color: white;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
     width: auto; /* Set a fixed width for the button */
@@ -136,7 +135,7 @@ body {
 }
 .search-bar button img{
     display: block;
-    margin: 0px;
+    margin-left: 2px;
     width: 50px; /* Adjust the width as necessary */
     height: auto; /* Adjust the height as necessary */
 }

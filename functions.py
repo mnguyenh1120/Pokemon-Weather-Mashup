@@ -35,7 +35,10 @@ weather_to_pokemon_type = {
     "Clouds": ["fairy", "fighting", "poison"],
 }
 
+pokemon_cache = {}
+
 def pokemon_sprite(pokemon_data, shiny_status):
+
     try:
         if pokemon_data and 'sprites' in pokemon_data:
             # Make things simpler I am going to access the default front sprite of the Pokemon
@@ -91,9 +94,15 @@ def get_pokemon_by_type(pokemon_types):
                 pokemon_type_data = json.loads(response.read().decode('utf-8'))
                 # pprint.pprint(pokemon_type_data)
                 for pokemon in pokemon_type_data['pokemon']:
-                    pokemon_list.append(pokemon['pokemon']['name'])
+                    if 'varieties' in pokemon_type_data:
+                        for variety in pokemon_type_data['varieties']:
+                            if variety['isdefault'] and pokemon['pokemon']['name'] == variety['pokemon']['name']:
+                                pokemon_list.append(pokemon['pokemon']['name'])
+                                break
+                    else:
+                        pokemon_list.append(pokemon['pokemon']['name'])
+            time.sleep(0.25)
 
-            time.sleep(1)
         except Exception as error:
             print(f"Error fetching data for type '{pokemon_type}': {error}")
             continue
@@ -181,7 +190,7 @@ def get_city_data():
         current_forecast_data = get_current_forecast(coordinates, api_key1)
         weather_condition = current_forecast_data['weather'][0]['main']
         iconid = current_forecast_data['weather'][0]['icon']
-        temperature = current_forecast_data['main']['temp']
+        temperature = round(current_forecast_data['main']['temp'])
         icon_url = weather_icon(iconid)
         # print(f'Current Forecast: {weather_condition}')
         pokemon_list = get_types_for_weather(weather_condition)
