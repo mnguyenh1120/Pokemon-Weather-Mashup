@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Washington Weather Encounters</title>
+
+    <!-- Link to the external CSS files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <!-- The particles container -->
+    <div id="tsparticles"></div>
+
+    <!-- Title -->
+    <div class="title">
+        <img src="{{ url_for('static', filename='washington.png') }}" alt="Washington Weather Encounters">
+    </div>
+
+    <!-- Search bar -->
+    <form action="/search" method="GET" class="search-bar">
+        <input type="text" name="query" placeholder="Search for a Location!" required>
+        <button type="submit">
+            <img src="{{ url_for('static', filename='minior pink.png') }}" alt="Minior Button"></button>
+    </form>
+
+    <!-- Main Content Block -->
+    <main>
+        {% block content %}
+        <!-- Child templates will override this block -->
+        {% endblock %}
+    </main>
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='particles-config.js') }}"></script>
+</body>
+</html>

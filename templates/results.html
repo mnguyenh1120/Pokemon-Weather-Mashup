@@ -1,16 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>{{ title }}</title>
-</head>
-<body>
-    <h1>{{ title }}</h1>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% else %}
-        <h2>Results for {{ results['name'] }}</h2>
-        <img src="{{ results['sprites']['front_default'] }}" alt="Pokemon Sprite">
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <p>{{ message }}</p>
     {% endif %}
-    <a href="/">Go back</a>
-</body>
-</html>
+    <div class="container">
+        {% for item in data %}
+        <div class="card">
+            <div class="condition">{{ item.condition }}</div>
+            <div class="temp">{{ item.temperature }}</div>
+            <div class="city">{{ item.city }}</div>
+            <div class="pokemon">
+                {% for pokemon in item.pokemon %}
+                <div class="pokemon-item">
+                    <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
+                    <div class="pokemon-name">{{ pokemon.name }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

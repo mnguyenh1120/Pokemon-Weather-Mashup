@@ -1,26 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Washington Weather Encounters</title>
-    <!-- Link to the external CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="title">
-    <img src="{{ url_for('static', filename='washington.png') }}" alt="Washington Weather Encounters">
-    </div>
-    <div class="container">
-        {% for item in data %}
-        <div class="card">
+{% extends "base.html" %}
+
+{{% block content %}
+<!-- Cards container -->
+<<div class="container">
+    {% for item in data %}
+    <div class="card">
+        <div class="condition">{{ item.condition }}</div>
+        <div class="temp">{{ item.temperature }}
             <div class="city">{{ item.city }}</div>
-            <img src="{{ item.pokemon.sprite }}" alt="{{ item.pokemon.name }}">
-            <div class="pokemon">{{ item.pokemon.name }}</div>
-            <div class="temp">{{ item.temperature }}</div>
-            <div class="condition">{{ item.condition }}</div>
         </div>
-        {% endfor %}
+        <div class="pokemon">
+            {% for pokemon in item.pokemon %}
+            <div class="pokemon-item">
+                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
+                <div class="pokemon-name">{{ pokemon.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-</body>
-</html>
+    {% endfor %}
+</div>
+{% endblock %}
+
+</form>
