@@ -17,7 +17,7 @@ body {
 .title img {
     display: block;
     margin: 0 auto;
-    width: 1000px;
+    width: 800px;
     height: auto;
     padding-bottom: 10px;
     padding-top: 30px;
@@ -27,7 +27,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: auto;
     gap: 75px;
-    padding: 40px 200px 200px;
+    padding: 40px 100px 100px;
 }
 /* Card Styling */
 .card {
@@ -43,12 +43,12 @@ body {
     box-shadow: 0 4px 6px rgba(34, 34, 89, 0.35);
     overflow: hidden; /* Prevent content overflow */
     position: relative; /* Ensure child elements respect card boundaries */
-    height: 325px;
+    height: 250px;
 }
 .card img {
     width: fit-content;
     height: fit-content;
-    transform: scale(1.5)
+    transform: scale(1)
 }
 /* Pokemon Styling */
 .pokemon {
@@ -117,32 +117,37 @@ body {
 .search-bar {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin: 10px 0;
     font-family: 'Poppins', Arial, sans-serif;
+    font-color: rgba(34, 34, 89, 0.35);
 }
 .search-bar input[type="text"] {
-    width: 400px;
-    padding: 10px 25px;
+    width: 310px;
+    height: 40px;
+    padding: 5px 25px;
+    border: 2px solid #d6bed3;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 16px;
     font-family: 'Poppins', Arial, sans-serif;
+    color: rgb(34, 34, 89);
     font-weight: 400;
 }
 .search-bar button {
     padding: 10px;
     margin-left: 15px;
     background-color: #e89cb7;
-    color: white;
+    color: whitesmoke;
     border-radius: 5px;
     cursor: pointer;
     width: auto;
-    height: auto;
+    height: 55px;
 }
 .search-bar button img{
     display: block;
     margin-left: 2px;
-    width: 50px;
-    height: auto;
+    width: auto;
+    height: 35px;
 }
 .search-bar button:hover {
     background-color: #fd71a2;
