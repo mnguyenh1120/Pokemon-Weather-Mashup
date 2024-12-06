@@ -1,4 +1,3 @@
-import experiment
 import functions
 from flask import Flask, render_template, request
 import urllib.parse, urllib.request, urllib.error, json
@@ -10,9 +9,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    data = functions.get_city_data()
-    print("DEBUG: Data returned by get_city_data:", data)  # Debugging line
-    return render_template("index.html", data=data)
+    try:
+        data = functions.get_city_data()
+        print("DEBUG: Data returned by get_city_data:", data)
+        return render_template("index.html", data=data)
+    except Exception as e:
+        print(f"Error in home route: {e}")
+        return "An error occurred while processing your request.", 500
 
 @app.route('/search')
 def search():
@@ -22,4 +25,4 @@ def search():
     return render_template('results.html', data=filtered_data)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
