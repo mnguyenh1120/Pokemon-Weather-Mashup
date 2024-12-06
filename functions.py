@@ -38,10 +38,11 @@ weather_to_pokemon_type = {
 pokemon_cache = {}
 CACHE_EXPIRE_TIME = 60
 
-def is_cache_expired(weather_condition):
-    if weather_condition not in pokemon_cache:
+def is_cache_expired(city, weather_condition):
+    key = (city, weather_condition)
+    if key not in pokemon_cache:
         return True
-    cache_time = pokemon_cache[weather_condition]['timestamp']
+    cache_time = pokemon_cache[key]['timestamp']
     return (time.time() - cache_time) > CACHE_EXPIRE_TIME
 
 def pokemon_sprite(pokemon_data, shiny_status):
@@ -116,29 +117,6 @@ def get_pokemon_by_type(pokemon_types):
     # print(pokemon_list)
     return pokemon_list
 
-def get_types_for_weather(weather_condition):
-    ### Implementing a cache system ###
-    if weather_condition in pokemon_cache and not is_cache_expired(weather_condition):
-        print(f'Using cached data for {weather_condition}')
-        return pokemon_cache[weather_condition]['pokemon_data']
-
-    if not weather_condition:
-        print("Invalid weather condition received.")
-        return None
-    print(f'Weather to pull types from : {weather_condition}')
-    types_to_search = weather_to_pokemon_type.get(weather_condition)
-    if types_to_search:
-        pokemon_list = set(get_pokemon_by_type(types_to_search))
-        # randomized_pokemon(list(set(pokemon_list)))
-        ### Stores the cache with pokemon list ###
-        pokemon_cache[weather_condition] = {
-            'pokemon_data': list(pokemon_list),
-            'timestamp': time.time()
-        }
-        return list(pokemon_list)
-    else:
-        return None
-
 def randomized_pokemon(pokemon_list):
     shiny_chance = 1 / 4096
     number_of_pokemon = 2
@@ -155,6 +133,30 @@ def randomized_pokemon(pokemon_list):
         })
     return pokemon_pair_data
 
+def get_types_for_weather(city, weather_condition):
+    ### Implementing a cache system ###
+    key = (city, weather_condition)
+    if key in pokemon_cache and not is_cache_expired(city, weather_condition):
+        print(f"Using cached data for {city}, {weather_condition}")
+        return pokemon_cache[key]['pokemon_data']
+
+    if not weather_condition:
+        print("Invalid weather condition received.")
+        return None
+    print(f'Weather to pull types from : {weather_condition}')
+    types_to_search = weather_to_pokemon_type.get(weather_condition)
+    if types_to_search:
+        pokemon_list = get_pokemon_by_type(types_to_search)
+        # randomized_pokemon(list(set(pokemon_list)))
+        pokemon_pair_data = randomized_pokemon(pokemon_list)
+        ### Stores the cache with pokemons ###
+        pokemon_cache[key] = {
+            'pokemon_data': list(pokemon_pair_data),
+            'timestamp': time.time()
+        }
+        return pokemon_pair_data
+    else:
+        return None
 
 def geolocation_finder(location, api_key1, limit = 1):
     base_url_geolocation = "http://api.openweathermap.org/geo/1.0/direct?q="
@@ -198,21 +200,23 @@ def weather_icon(iconid):
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
     return icon_url
 
-def get_pokemon_cache(weather_condition):
-    if is_cache_expired(weather_condition):
-        print(f"Cache for {weather_condition} is expired. Fetching new data.")
+def get_pokemon_cache(city, weather_condition):
+    key = (city, weather_condition)
+    if is_cache_expired(city, weather_condition):
+        print(f"Cache for {city}, {weather_condition} is expired. Fetching new data.")
         # Fetch the list of pokemon
-        pokemon_list = get_types_for_weather(weather_condition)
+        pokemon_list = get_types_for_weather(city, weather_condition)
         # Update the cache with the new data
-        pokemon_cache[weather_condition] = {
-            'pokemon_data': list(set(pokemon_list)),
+        pokemon_pair_data = set(randomized_pokemon(pokemon_list))
+        pokemon_cache[key] = {
+            'pokemon_data': list(pokemon_pair_data),
             'timestamp': time.time()  # Update timestamp when new data is fetched
         }
-        print(f"Updated cache for {weather_condition}: {pokemon_cache[weather_condition]}")
+        print(f"Updated cache for {weather_condition}: {pokemon_cache[key]}")
     else:
         print(f"Using cached data for {weather_condition}")
     # Return the list of Pokémon, either from cache or fetched data
-    return pokemon_cache[weather_condition]['pokemon_data']
+    return pokemon_cache[key]['pokemon_data']
 
 def get_city_data():
     # List of default cities to use
@@ -226,8 +230,7 @@ def get_city_data():
         temperature = round(current_forecast_data['main']['temp'])
         icon_url = weather_icon(iconid)
         # print(f'Current Forecast: {weather_condition}')
-        pokemon_list = get_types_for_weather(weather_condition)
-        pokemon_pair_data = randomized_pokemon(pokemon_list)
+        pokemon_pair_data = get_types_for_weather(city, weather_condition)
         city_data.append({
             "city": city,
             "pokemon": pokemon_pair_data,  # Add the pair of Pokémon
@@ -239,7 +242,9 @@ def get_city_data():
     return city_data
 
 
-geolocation_finder('Seattle', api_key1)
+#geolocation_finder('Seattle', api_key1)
 # get_types_for_weather("Rain")
 # get_pokemon_by_type('fire')
+get_city_data()
+time.sleep(5)
 get_city_data()

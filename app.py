@@ -17,22 +17,30 @@ def home():
         print(f"Error in home route: {e}")
         return "An error occurred while processing your request.", 500
 
-@app.route('/search')
 @app.route('/search', methods=['GET'])
 def search():
-    query = request.args.get('query', '').strip()  # Get the search query
+    query = request.args.get('query', '').strip()  # Get the search query and strip whitespace
     if not query:
         return render_template('results.html', error="Please enter a city name.")
 
     try:
-        # Fetch the weather data for the city
+        # Fetch the geolocation for the city
         coordinates = functions.geolocation_finder(query, api_key1)
         if not coordinates:
-            return render_template('results.html', error=f"No data found for city: {query}")
+            return render_template(
+                'results.html',
+                error=f"Sorry, no results were found for your query: '{query}'",
+                place=query
+            )
 
+        # Fetch weather data
         current_forecast_data = functions.get_current_forecast(coordinates, api_key1)
         if not current_forecast_data:
-            return render_template('results.html', error="Unable to fetch weather data.")
+            return render_template(
+                'results.html',
+                error="Unable to fetch weather data. Please try again.",
+                place=query
+            )
 
         # Extract weather condition and temperature
         weather_condition = current_forecast_data['weather'][0]['main']
