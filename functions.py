@@ -117,7 +117,7 @@ def get_pokemon_by_type(pokemon_types):
     return pokemon_list
 
 def get_types_for_weather(weather_condition):
-    # Implementing a cache system
+    ### Implementing a cache system ###
     if weather_condition in pokemon_cache and not is_cache_expired(weather_condition):
         print(f'Using cached data for {weather_condition}')
         return pokemon_cache[weather_condition]['pokemon_data']
@@ -130,7 +130,7 @@ def get_types_for_weather(weather_condition):
     if types_to_search:
         pokemon_list = set(get_pokemon_by_type(types_to_search))
         # randomized_pokemon(list(set(pokemon_list)))
-        # Stores the cache with pokemon list
+        ### Stores the cache with pokemon list ###
         pokemon_cache[weather_condition] = {
             'pokemon_data': list(pokemon_list),
             'timestamp': time.time()
@@ -198,11 +198,11 @@ def weather_icon(iconid):
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
     return icon_url
 
-def get_pokemon_for_weather_condition(weather_condition, weather_types):
+def get_pokemon_cache(weather_condition):
     if is_cache_expired(weather_condition):
         print(f"Cache for {weather_condition} is expired. Fetching new data.")
-        # Fetch new Pokémon data (replace with your actual data fetching logic)
-        pokemon_list = get_pokemon_by_type(weather_types)
+        # Fetch the list of pokemon
+        pokemon_list = get_types_for_weather(weather_condition)
         # Update the cache with the new data
         pokemon_cache[weather_condition] = {
             'pokemon_data': list(set(pokemon_list)),
