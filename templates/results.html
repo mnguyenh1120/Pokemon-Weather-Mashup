@@ -1,43 +1,63 @@
 {% extends "base.html" %}
 
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
+{% block title %}
+    Search results for {{ query }}
 {% endblock %}
 
 {% block content %}
-    <div class="results-container">
-        {% if data %}
+<div class="container">
+    {% if data and data|length > 0 %}
+        <h2>Search results for "{{ query }}"</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Condition</th>
+                    <th>Temperature</th>
+                    <th>Pokémon</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for item in data %}
-                <div class="card">
+                <tr>
+                    <!-- City Name -->
+                    <td class="city">{{ item.city }}</td>
+
                     <!-- Weather Condition -->
-                    <div class="condition">
-                        {{ item.condition }}
+                    <td class="condition">
+                        <span>{{ item.condition }}</span>
                         <img src="{{ item.icon }}" alt="{{ item.condition }}" class="weather-icon">
-                    </div>
+                    </td>
 
                     <!-- Temperature -->
-                    <div class="temp">{{ item.temperature }}°F</div>
-
-                    <!-- City Name -->
-                    <div class="city">{{ item.city }}</div>
+                    <td class="temp">{{ item.temperature }}°F</td>
 
                     <!-- Pokémon Section -->
-                    <div class="pokemon">
-                        {% for pokemon in item.pokemon %}
-                            <div class="pokemon-item">
-                                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
-                                <div class="pokemon-name">{{ pokemon.name }}</div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                    <td class="pokemon">
+                        <div class="pokemon-list">
+                            {% for pokemon in item.pokemon %}
+                                <div class="pokemon-item">
+                                    <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
+                                    <div class="pokemon-name">{{ pokemon.name }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
             {% endfor %}
-        {% elif error %}
-            <div class="no-results">
-                <p class="round_background">{{ error }}</p>
-                <img src="{{ url_for('static', filename='anya.gif') }}" alt="Crying GIF" class="crying-gif">
-            </div>
-        {% endif %}
-    </div>
+            </tbody>
+        </table>
+    {% elif error %}
+        <!-- Error Message -->
+        <p class="round_background">
+            {{ error }}
+        </p>
+        <img src="{{ url_for('static', filename='anya.gif') }}" alt="Crying GIF" class="crying-gif">
+    {% else %}
+        <!-- Fallback for No Results -->
+        <p class="round_background">
+            Sorry, no results were found. Please go back and try again.
+        </p>
+    {% endif %}
+</div>
 {% endblock %}

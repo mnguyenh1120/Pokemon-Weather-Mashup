@@ -35,6 +35,7 @@ weather_to_pokemon_type = {
     "Clouds": ["fairy", "fighting", "poison"],
 }
 
+base_url_pokemon = "https://pokeapi.co/api/v2/"
 pokemon_cache = {}
 CACHE_EXPIRE_TIME = 600
 
@@ -46,7 +47,6 @@ def is_cache_expired(city, weather_condition):
     return CACHE_EXPIRE_TIME > (time.time() - cache_time)
 
 def pokemon_sprite(pokemon_data, shiny_status):
-
     try:
         if pokemon_data and 'sprites' in pokemon_data:
             # Make things simpler I am going to access the default front sprite of the Pokemon
@@ -54,6 +54,27 @@ def pokemon_sprite(pokemon_data, shiny_status):
                 pokemon_sprite = pokemon_data['sprites']['front_shiny']
             else:
                 pokemon_sprite = pokemon_data['sprites']['front_default']
+
+            # Incase it is an alternate version of that specific pokemon that does not have a sprite
+            if not pokemon_sprite and 'species' in pokemon_data:
+                print(f"No sprite found for {pokemon_data['species']['name']} due to alternate version not having a sprite")
+                species_name = pokemon_data['species']['name']
+                species_url = f'{base_url_pokemon}pokemon/{species_name}'
+                species_request = urllib.request.Request(species_url, headers={'User-Agent': 'Mozilla/5.0'})
+                try:
+                    with urllib.request.urlopen(species_request) as response:
+                        species_data = json.loads(response.read().decode('utf-8'))
+                        if shiny_status:
+                            pokemon_sprite = species_data['sprites']['front_shiny']
+                        else:
+                            pokemon_sprite = species_data['sprites']['front_default']
+
+                except urllib.error.HTTPError as error:
+                    print("An unexpected error occurred:\nError code: {}".format(error.code))
+                    return None
+                except urllib.error.URLError as error:
+                    print("The server couldn't fulfill the request.\nError code: {} ".format(error.code))
+                    return None
 
             if pokemon_sprite:
                 print(f'Pokemon Sprite Url: {pokemon_sprite}')
@@ -67,7 +88,6 @@ def pokemon_sprite(pokemon_data, shiny_status):
         return None
 
 def get_pokemon_info(pokemon_name, shiny_status):
-    base_url_pokemon = "https://pokeapi.co/api/v2/"
     pokemon = f'{base_url_pokemon}pokemon/{pokemon_name.lower()}'
 
     try:
@@ -102,13 +122,7 @@ def get_pokemon_by_type(pokemon_types):
                 pokemon_type_data = json.loads(response.read().decode('utf-8'))
                 # pprint.pprint(pokemon_type_data)
                 for pokemon in pokemon_type_data['pokemon']:
-                    if 'varieties' in pokemon_type_data:
-                        for variety in pokemon_type_data['varieties']:
-                            if variety['isdefault'] and pokemon['pokemon']['name'] == variety['pokemon']['name']:
-                                pokemon_list.append(pokemon['pokemon']['name'])
-                                break
-                    else:
-                        pokemon_list.append(pokemon['pokemon']['name'])
+                    pokemon_list.append(pokemon['pokemon']['name'])
             time.sleep(0.25)
 
         except Exception as error:
@@ -201,9 +215,15 @@ def weather_icon(iconid):
     return icon_url
 
 def get_city_data():
-    # List of default cities to use
-    cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside"]
     city_data = []
+    # cities = []
+    # List of default cities to use
+
+    # if not query:
+    #     cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside"]
+    # else:
+    #     cities = [query]
+    cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside"]
     for city in cities:
         coordinates = geolocation_finder(city, api_key1)
         current_forecast_data = get_current_forecast(coordinates, api_key1)
@@ -220,13 +240,13 @@ def get_city_data():
             "condition": weather_condition,
             "icon": icon_url # Replace with real weather condition if desired)
         })
-        # time.sleep(0.25)
+    # time.sleep(0.25)
     return city_data
 
 
 #geolocation_finder('Seattle', api_key1)
 # get_types_for_weather("Rain")
 # get_pokemon_by_type('fire')
-get_city_data()
-time.sleep(5)
-get_city_data()
+# get_city_data()
+# time.sleep(5)
+# get_city_data()
