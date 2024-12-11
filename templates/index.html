@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Cards container -->
-<div class="container">
-    {% for item in data %}
-    <div class="card">
-        <!-- Weather Condition -->
-        <div class="condition">{{ item.condition }}<img src="{{ item.icon }}" alt="{{ item.condition }} icon" class="weather-icon">
-        </div>
-         <!-- Temperature -->
-        <div class="temp">{{ item.temperature }}°F</div>
-        <div class="city">{{ item.city }}</div>
-        <div class="pokemon">
-            {% for pokemon in item.pokemon %}
-            <div class="pokemon-item">
-                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
-                <div class="pokemon-name">{{ pokemon.name }}</div>
+    <!-- Cards container -->
+    <div class="container">
+        {% for item in data %}
+            <div class="card">
+                <!-- Weather Condition -->
+                <div class="condition">{{ item.condition }}<img src="{{ item.icon }}" alt="{{ item.condition }} icon"
+                                                                class="weather-icon">
+                </div>
+                <!-- Temperature -->
+                <div class="temp">{{ item.temperature }}°F</div>
+                <div class="city">{{ item.city }}</div>
+                <div class="pokemon">
+                    {% for pokemon in item.pokemon %}
+                        <div class="pokemon-item">
+                            <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
+                            <div class="pokemon-name">{{ pokemon.name }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 {% endblock %}

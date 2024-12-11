@@ -174,6 +174,8 @@ def get_types_for_weather(city, weather_condition):
 
 def geolocation_finder(location, api_key1, limit = 1):
     base_url_geolocation = "http://api.openweathermap.org/geo/1.0/direct?q="
+    if ' ' in location:
+        location = urllib.parse.quote(location)
     geolocation = f'{base_url_geolocation}{location}&limit={limit}&appid={api_key1}'
 
     geolocation_request = urllib.request.Request(geolocation)
@@ -214,16 +216,13 @@ def weather_icon(iconid):
     # icon_url_doubled = f'https://openweathermap.org/img/wn/{iconid}@2x.png'
     return icon_url
 
-def get_city_data():
+def get_city_data(query=None):
     city_data = []
-    # cities = []
-    # List of default cities to use
-
-    # if not query:
-    #     cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside"]
-    # else:
-    #     cities = [query]
-    cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside"]
+    cities = []
+    if query:
+        cities = [city.strip() for city in query.split(',')]
+    else:
+        cities = ["Seattle", "Tacoma", "Vancouver", "Bellingham", "Forks", "Sunnyside", "Olympia", "Yakima", "Kennewick"]
     for city in cities:
         coordinates = geolocation_finder(city, api_key1)
         current_forecast_data = get_current_forecast(coordinates, api_key1)

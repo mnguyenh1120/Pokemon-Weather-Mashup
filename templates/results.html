@@ -5,59 +5,35 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
     {% if data and data|length > 0 %}
-        <h2>Search results for "{{ query }}"</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>City</th>
-                    <th>Condition</th>
-                    <th>Temperature</th>
-                    <th>Pokémon</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="container">
             {% for item in data %}
-                <tr>
-                    <!-- City Name -->
-                    <td class="city">{{ item.city }}</td>
-
+                <div class="card">
                     <!-- Weather Condition -->
-                    <td class="condition">
-                        <span>{{ item.condition }}</span>
-                        <img src="{{ item.icon }}" alt="{{ item.condition }}" class="weather-icon">
-                    </td>
-
+                    <div class="condition">{{ item.condition }}<img src="{{ item.icon }}"
+                                                                    alt="{{ item.condition }} icon"
+                                                                    class="weather-icon">
+                    </div>
                     <!-- Temperature -->
-                    <td class="temp">{{ item.temperature }}°F</td>
-
-                    <!-- Pokémon Section -->
-                    <td class="pokemon">
-                        <div class="pokemon-list">
-                            {% for pokemon in item.pokemon %}
-                                <div class="pokemon-item">
-                                    <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
-                                    <div class="pokemon-name">{{ pokemon.name }}</div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </td>
-                </tr>
+                    <div class="temp">{{ item.temperature }}°F</div>
+                    <div class="city">{{ item.city }}</div>
+                    <div class="pokemon">
+                        {% for pokemon in item.pokemon %}
+                            <div class="pokemon-item">
+                                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}">
+                                <div class="pokemon-name">{{ pokemon.name }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     {% elif error %}
         <!-- Error Message -->
-        <p class="round_background">
+        <div class="error-message">
             {{ error }}
-        </p>
-        <img src="{{ url_for('static', filename='anya.gif') }}" alt="Crying GIF" class="crying-gif">
-    {% else %}
-        <!-- Fallback for No Results -->
-        <p class="round_background">
+            <img src="{{ url_for('static', filename='anya.gif') }}" alt="Crying GIF" class="crying-gif">
             Sorry, no results were found. Please go back and try again.
-        </p>
+        </div>
     {% endif %}
-</div>
 {% endblock %}
