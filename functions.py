@@ -1,16 +1,10 @@
-# PokeAPI
-# "This is a consumption-only API — only the HTTP GET method is available on resources."
-# from importlib.metadata import pass_none
-
-import requests
-from keys import api_key1
-from flask import Flask, current_app
+import os
 import urllib.parse, urllib.request, urllib.error, json
 import pprint
 import random
 import time
 
-# from matplotlib.sphinxext.mathmpl import latex_math
+api_key1 = os.getenv('API_KEY1')
 
 # https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
